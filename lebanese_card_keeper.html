@@ -1,0 +1,2406 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="سجّال الورق">
+  <title>سجّال الورق | هاند وليخة أونلاين</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-base: #090d16;
+      --bg-card: #111723;
+      --bg-card-sub: #172030;
+      --border-color: #202b3f;
+      --border-focus: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #64748b;
+      
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    input, textarea {
+      user-select: text;
+    }
+
+    body {
+      font-family: 'Cairo', system-ui, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 25px;
+    }
+
+    .num {
+      font-family: 'Inter', system-ui, sans-serif;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 530px;
+      margin: 0 auto;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 2px;
+    }
+
+    .app-branding {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-icon {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .app-title-group h1 {
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .icon-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      padding: 5px 8px;
+      font-size: 12px;
+      font-family: inherit;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.96);
+      background: var(--bg-card-sub);
+    }
+
+    /* ONLINE MULTIPLAYER ROOM BANNER */
+    .room-sync-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: border-color 0.2s ease;
+    }
+
+    .room-sync-bar.online-active {
+      border-color: rgba(16, 185, 129, 0.45);
+      background: linear-gradient(90deg, rgba(16, 185, 129, 0.08), var(--bg-card));
+    }
+
+    .room-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-sub);
+    }
+
+    .status-dot.active {
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+    }
+
+    .room-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-btn {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 4px 9px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Tabs */
+    .tab-selector {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 3px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--border-color);
+      color: #fff;
+    }
+
+    /* DEALER BANNER: مين عليه التوزيع هو الخاسر */
+    .dealer-banner {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.03));
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dealer-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dealer-badge-icon {
+      font-size: 18px;
+    }
+
+    .dealer-label {
+      font-size: 11px;
+      color: var(--accent-amber);
+      font-weight: 700;
+    }
+
+    .dealer-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .dealer-reason {
+      font-size: 11px;
+      color: var(--text-sub);
+      background: rgba(0,0,0,0.3);
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-header-clean {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-sub {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: var(--bg-card-sub);
+      color: var(--text-muted);
+    }
+
+    /* Round Track */
+    .round-track {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 4px;
+    }
+
+    .round-dot {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      color: var(--text-sub);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .round-dot.done {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: var(--accent-green);
+    }
+
+    .round-dot.current {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    /* Standings */
+    .standings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .standing-item {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 7px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .standing-item.is-dealer {
+      border-color: rgba(245, 158, 11, 0.45);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), var(--bg-card-sub));
+    }
+
+    .standing-item.is-leader {
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .st-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .st-rank {
+      font-size: 10px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: var(--text-muted);
+    }
+
+    .st-score {
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .score-minus { color: var(--accent-green); }
+    .score-plus { color: var(--accent-red); }
+    .score-zero { color: var(--text-muted); }
+
+    /* Likha HP Bars */
+    .hp-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: var(--radius-pill);
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    .hp-bar-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+    }
+
+    /* Input Rows */
+    .input-row {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+    }
+
+    .player-tag {
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sign-btn {
+      width: 50px;
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      font-weight: 800;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .sign-btn.positive {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
+    .sign-btn.negative {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .score-input {
+      width: 100%;
+      height: 34px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+    }
+
+    .score-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .baqi-btn {
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* 36 Balance */
+    .balance-meter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--border-color);
+    }
+
+    .balance-meter.exact {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.35);
+      color: #34d399;
+    }
+
+    .balance-meter.under {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+    }
+
+    .balance-meter.over {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #f87171;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      height: 38px;
+      background: var(--accent-blue);
+      border: none;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-primary:not(:disabled):active {
+      transform: scale(0.98);
+    }
+
+    /* History Table */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    th {
+      color: var(--text-sub);
+      font-weight: 700;
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 7px 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      font-weight: 600;
+    }
+
+    .round-num-cell {
+      color: var(--text-sub);
+      font-size: 11px;
+    }
+
+    .action-icons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .btn-table-action {
+      background: transparent;
+      border: none;
+      color: var(--text-sub);
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 13px;
+      border-radius: 4px;
+    }
+
+    .btn-table-action:active {
+      background: var(--border-color);
+      color: #fff;
+    }
+
+    /* Modal Overlay & Box */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 440px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .modal-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* End Titles */
+    .titles-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .title-card {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-icon {
+      font-size: 20px;
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .title-details {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .title-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--accent-amber);
+    }
+
+    .title-player {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .title-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    /* Edit Names Inputs */
+    .name-edit-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .name-edit-field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      width: 65px;
+    }
+
+    .name-edit-field input {
+      flex-grow: 1;
+      height: 36px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: #fff;
+      padding: 0 10px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    /* Archive Items */
+    .archive-item {
+      background: var(--bg-card-sub);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .archive-scores-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    .archive-score-pill {
+      background: rgba(0,0,0,0.25);
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* In-App Toast */
+    #toast-msg {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fff;
+      padding: 7px 16px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+
+    #toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 998;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti-canvas"></canvas>
+  <div id="toast-msg">رسالة إشعار</div>
+
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header class="top-bar">
+      <div class="app-branding">
+        <div class="app-icon">🃏</div>
+        <div class="app-title-group">
+          <h1>سجّال الورق</h1>
+          <div style="font-size: 10px; color: var(--text-muted);" id="userDisplayTag">
+            لاعب أونلاين
+          </div>
+        </div>
+      </div>
+      
+      <div class="top-actions">
+        <button class="icon-btn" id="btnOpenRoomModal">
+          <span>🌐</span>
+          <span>الغرفة</span>
+        </button>
+        <button class="icon-btn" id="btnOpenNamesModal" title="تعديل الأسماء">
+          <span>👥</span>
+          <span>الأسماء</span>
+        </button>
+        <button class="icon-btn" id="btnOpenArchiveModal" title="الأرشيف">
+          <span>📜</span>
+          <span>الأرشيف</span>
+        </button>
+        <button class="icon-btn" id="btnOpenResetModal" style="color: #f87171;" title="تصفير">
+          <span>↺</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ONLINE ROOM SYNC STATUS BANNER -->
+    <div class="room-sync-bar" id="roomSyncBar">
+      <div class="room-status-badge">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="roomStatusText">وضع محلي (غير متصل بغرفة)</span>
+      </div>
+      <div class="room-actions">
+        <button class="pill-btn" id="btnRoomQuickAction" style="background: var(--accent-blue);">
+          <span>إنشاء غرفة ⚡</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Selector Tabs -->
+    <div class="tab-selector">
+      <button class="tab-btn active" id="tabBtnHand">
+        <span>🃏</span>
+        <span>هاند (9 جولات)</span>
+      </button>
+      <button class="tab-btn" id="tabBtnLikha">
+        <span>♠️</span>
+        <span>ليخة (مجموع 36)</span>
+      </button>
+    </div>
+
+    <!-- DEALER BANNER (مين عليه التوزيع = الخاسر بالمجموع) -->
+    <div class="dealer-banner">
+      <div class="dealer-info">
+        <div class="dealer-badge-icon">🎴</div>
+        <div>
+          <div class="dealer-label">عليه التوزيع (الموزّع):</div>
+          <div class="dealer-name" id="dealerPlayerName">بانتظار أول جولة</div>
+        </div>
+      </div>
+      <div class="dealer-reason" id="dealerReason">الخاسر حالياً بالمجموع</div>
+    </div>
+
+    <!-- MAIN VIEW: HAND -->
+    <main id="handView" style="display: flex; flex-direction: column; gap: 10px;">
+      
+      <!-- Hand Rounds Progress -->
+      <section class="card" style="padding: 9px 12px;">
+        <div class="card-header-clean">
+          <span class="card-title">مسار الجولات</span>
+          <span class="badge-sub" id="handRoundStatus">الجولة 1 من 9</span>
+        </div>
+        <div class="round-track" id="handRoundPills"></div>
+      </section>
+
+      <!-- Hand Standings -->
+      <section class="card">
+        <div class="card-header-clean">
+          <span class="card-title">المجموع (أكبر ماينس رابح)</span>
+          <span class="badge-sub" style="color: var(--accent-green);">👑 متصدر الترتيب</span>
+        </div>
+        <div class="standings-grid" id="handStandingsGrid"></div>
+      </section>
+
+      <!-- Hand Input -->
+      <section class="card" id="handInputSection">
+        <div class="card-header-clean">
+          <span class="card-title" id="handInputTitle">تسجيل سكور الجولة 1</span>
+          <span class="badge-sub">الافتراضي (+) بلس</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;" id="handInputRows"></div>
+        <button class="btn-primary" id="btnSubmitHand">
+          <span>تسجيل الجولة</span>
+          <span id="handSubmitRoundNum">(1)</span>
+        </button>
+      </section>
+
+      <!-- Hand History -->
+      <section class="card">
+        <div class="card-header-clean">
+          <span class="card-title">سجل الجولات (هاند)</span>
+          <span class="badge-sub" id="handRoundsCountBadge">0 جولات</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 34px;">#</th>
+                <th class="th-p0">محمد</th>
+                <th class="th-p1">عبد</th>
+                <th class="th-p2">نور</th>
+                <th class="th-p3">حيدر</th>
+                <th style="width: 50px;">تحكم</th>
+              </tr>
+            </thead>
+            <tbody id="handTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- MAIN VIEW: LIKHA -->
+    <main id="likhaView" style="display: none; flex-direction: column; gap: 10px;">
+      
+      <!-- Likha 101 HP Standings -->
+      <section class="card">
+        <div class="card-header-clean">
+          <span class="card-title">عداد الـ 101 (أول واحد بيوصل بيخسر)</span>
+          <span class="badge-sub">المجموع التراكمي</span>
+        </div>
+        <div class="standings-grid" id="likhaStandingsGrid"></div>
+      </section>
+
+      <!-- Likha Input & 36 Checker -->
+      <section class="card" id="likhaInputSection">
+        <div class="card-header-clean">
+          <span class="card-title">تسجيل الجولة (ليخة)</span>
+          <span class="badge-sub">المجموع لازم 36</span>
+        </div>
+
+        <div class="balance-meter under" id="likhaBalanceMeter">
+          <span id="likhaBalanceText">فاضل 36 نقطة</span>
+          <span class="num" id="likhaCurrentSumBadge" style="font-weight: 800;">0 / 36</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px;" id="likhaInputRows"></div>
+
+        <button class="btn-primary" id="btnSubmitLikha" disabled>
+          <span>تأكيد وتسجيل الـ 36 نقطة</span>
+        </button>
+      </section>
+
+      <!-- Likha History -->
+      <section class="card">
+        <div class="card-header-clean">
+          <span class="card-title">سجل الجولات (ليخة)</span>
+          <span class="badge-sub" id="likhaRoundsCountBadge">0 جولات</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 34px;">#</th>
+                <th class="th-p0">محمد</th>
+                <th class="th-p1">عبد</th>
+                <th class="th-p2">نور</th>
+                <th class="th-p3">حيدر</th>
+                <th style="width: 50px;">تحكم</th>
+              </tr>
+            </thead>
+            <tbody id="likhaTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- MODAL: ONLINE ROOM MULTIPLAYER -->
+  <div class="modal-overlay" id="roomModal">
+    <div class="modal-box">
+      <div class="modal-title-row">
+        <div class="modal-title"><span>🌐</span> قعدة أونلاين لايف</div>
+        <button class="btn-close-modal" id="btnCloseRoomModal">✕</button>
+      </div>
+
+      <div id="roomConnectedView" style="display: none; flex-direction: column; gap: 10px;">
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: var(--radius-sm); padding: 12px; text-align: center;">
+          <div style="font-size: 11px; color: var(--accent-green); font-weight: 700;">🟢 أنت الآن متصل مباشرة بغرفة اللعب</div>
+          <div style="font-size: 26px; font-weight: 900; letter-spacing: 4px; margin: 4px 0;" class="num" id="roomModalCode">----</div>
+          <div style="font-size: 11px; color: var(--text-muted);">أي نقطة بتتسجل أو بتتعدل بتتحدّث عند الأربعة لايف بنفس اللحظة.</div>
+        </div>
+
+        <div style="display: flex; gap: 6px;">
+          <button class="btn-primary" id="btnCopyRoomLink" style="background: var(--accent-blue);">
+            <span>📋 نسخ الرابط</span>
+          </button>
+          <button class="btn-primary" id="btnShareRoomWhatsApp" style="background: #25D366;">
+            <span>💬 دعوة واتساب</span>
+          </button>
+        </div>
+
+        <button class="icon-btn" id="btnLeaveRoom" style="color: var(--accent-red); justify-content: center; padding: 8px;">
+          <span>🚪 مغادرة الغرفة والعودة للوضع المحلي</span>
+        </button>
+      </div>
+
+      <div id="roomDisconnectedView" style="display: flex; flex-direction: column; gap: 12px;">
+        <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+          العبوا سوا وكل واحد ماسك موبايله! اعمل غرفة وشارك الكود مع الشباب، أو ادخل كود الغرفة اللي عملها رفيقك.
+        </p>
+
+        <!-- Create Room Option -->
+        <div style="background: var(--bg-card-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 13px; font-weight: 800; color: #fff;">1. إنشاء غرفة جديدة</div>
+          <div style="font-size: 11px; color: var(--text-sub);">توليد كود من 4 أرقام لتبدأوا قعدة جديدة مع الشباب.</div>
+          <button class="btn-primary" id="btnCreateRoomAction" style="background: var(--accent-blue); margin-top: 4px;">
+            <span>⚡ إنشاء غرفة فورية</span>
+          </button>
+        </div>
+
+        <!-- Join Room Option -->
+        <div style="background: var(--bg-card-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 13px; font-weight: 800; color: #fff;">2. الانضمام لغرفة موجودة</div>
+          <div style="display: flex; gap: 6px;">
+            <input type="number" inputmode="numeric" id="joinRoomCodeInput" placeholder="أدخل كود الـ 4 أرقام" class="score-input" style="letter-spacing: 3px; font-size: 16px;">
+            <button class="btn-primary" id="btnJoinRoomAction" style="width: 100px; background: var(--accent-green);">
+              <span>دخول ↵</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT PLAYER NAMES -->
+  <div class="modal-overlay" id="namesModal">
+    <div class="modal-box">
+      <div class="modal-title-row">
+        <div class="modal-title"><span>👥</span> تعديل أسماء اللاعبين</div>
+        <button class="btn-close-modal" id="btnCloseNamesModal">✕</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="name-edit-field"><label>اللاعب 1:</label><input type="text" id="nameInput0"></div>
+        <div class="name-edit-field"><label>اللاعب 2:</label><input type="text" id="nameInput1"></div>
+        <div class="name-edit-field"><label>اللاعب 3:</label><input type="text" id="nameInput2"></div>
+        <div class="name-edit-field"><label>اللاعب 4:</label><input type="text" id="nameInput3"></div>
+      </div>
+      <button class="btn-primary" id="btnSavePlayerNames">حفظ الأسماء ومزامنتها</button>
+    </div>
+  </div>
+
+  <!-- MODAL: ARCHIVE -->
+  <div class="modal-overlay" id="archiveModal">
+    <div class="modal-box">
+      <div class="modal-title-row">
+        <div class="modal-title"><span>📜</span> سجل القعدات القديمة</div>
+        <button class="btn-close-modal" id="btnCloseArchiveModal">✕</button>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted);">
+        <span>مجموع القعدات:</span>
+        <span class="num" id="archiveTotalCount" style="color: #fff; font-weight: 800;">0</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;" id="archiveListContainer"></div>
+      <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+        <button class="btn-table-action" id="btnClearAllArchive" style="color: var(--accent-red); font-size: 11px;">مسح كل الأرشيف</button>
+        <button class="icon-btn" id="btnCloseArchiveBottom">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GAME OVER & TITLES -->
+  <div class="modal-overlay" id="gameOverModal">
+    <div class="modal-box">
+      <div class="modal-title-row">
+        <div class="modal-title"><span>🎉</span> <span id="gameOverModalTitle">انتهت اللعبة!</span></div>
+        <button class="btn-close-modal" id="btnCloseGameOverModal">✕</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 8px; text-align: center;">
+          <div style="font-size: 11px; color: var(--accent-green); font-weight: 700;">👑 الرابح الأول</div>
+          <div style="font-size: 15px; font-weight: 800;" id="goWinnerName">--</div>
+          <div class="num" style="font-size: 13px; color: var(--accent-green); font-weight: 700;" id="goWinnerScore">--</div>
+        </div>
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 8px; text-align: center;">
+          <div style="font-size: 11px; color: var(--accent-red); font-weight: 700;">☕ الخاسر (القهوة عليه)</div>
+          <div style="font-size: 15px; font-weight: 800;" id="goLoserName">--</div>
+          <div class="num" style="font-size: 13px; color: var(--accent-red); font-weight: 700;" id="goLoserScore">--</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); margin-bottom: 6px;">🎖️ ألقاب سهرة الليلة:</div>
+        <div class="titles-grid" id="goTitlesGrid"></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+        <button class="btn-primary" id="btnShareWhatsAppResults" style="background: #25D366;">مشاركة النتيجة والألقاب على واتساب 💬</button>
+        <button class="btn-primary" id="btnArchiveCurrentGameAndReset">💾 حفظ بالأرشيف وبدء لعبة جديدة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT ROUND -->
+  <div class="modal-overlay" id="editRoundModal">
+    <div class="modal-box">
+      <div class="modal-title-row">
+        <div class="modal-title"><span>✏️</span> <span id="editRoundTitle">تعديل الجولة</span></div>
+        <button class="btn-close-modal" id="btnCloseEditRoundModal">✕</button>
+      </div>
+      <div class="balance-meter under" id="editLikhaBalanceMeter" style="display: none;">
+        <span id="editLikhaBalanceText">فاضل 36 نقطة</span>
+        <span class="num" id="editLikhaBalanceVal">0 / 36</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;" id="editRoundInputsContainer"></div>
+      <button class="btn-primary" id="btnSaveEditedRound">حفظ التعديل والمزامنة</button>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRM ACTION (NO BROWSER ALERT / CONFIRM) -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal-box" style="max-width: 360px;">
+      <div class="modal-title-row">
+        <div class="modal-title" id="confirmModalTitle"><span>⚠️</span> تأكيد الإجراء</div>
+        <button class="btn-close-modal" id="btnCloseConfirmModal">✕</button>
+      </div>
+      <div style="font-size: 13px; color: var(--text-muted); line-height: 1.5;" id="confirmModalMessage">
+        هل أنت متأكد من هذا الإجراء؟
+      </div>
+      <div style="display: flex; gap: 6px; margin-top: 6px;">
+        <button class="icon-btn" id="btnCancelConfirm" style="flex: 1; justify-content: center; padding: 8px;">إلغاء</button>
+        <button class="btn-primary" id="btnExecuteConfirm" style="flex: 1; background: var(--accent-red);">تأكيد</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== LOGIC MODULE ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    /* --- GLOBALS & FIREBASE INITIALIZATION --- */
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'lebanese-card-keeper';
+    let authUser = null;
+    let db = null;
+    let auth = null;
+    let isFirebaseReady = false;
+
+    // Room sync subscription
+    let roomUnsubscribe = null;
+    let currentRoomId = null;
+
+    const DEFAULT_PLAYERS = ['محمد', 'عبد', 'نور', 'حيدر'];
+
+    let state = {
+      game: 'hand',
+      players: [...DEFAULT_PLAYERS],
+      hand: { rounds: [], currentSigns: [1, 1, 1, 1] },
+      likha: { rounds: [] },
+      archive: []
+    };
+
+    let editingRoundIndex = null;
+    let editingRoundGame = null;
+    let editSigns = [1, 1, 1, 1];
+    let confirmCallback = null;
+
+    // Audio tones
+    let audioCtx = null;
+    function playChime(freq = 440, type = 'sine') {
+      try {
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (!audioCtx) audioCtx = new AudioClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch (e) {}
+    }
+
+    // In-app Toast message
+    let toastTimer = null;
+    function showToast(text) {
+      const toast = document.getElementById('toast-msg');
+      toast.innerText = text;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2400);
+    }
+
+    // Custom confirm dialog
+    function showConfirmModal(title, msg, onConfirm) {
+      document.getElementById('confirmModalTitle').innerHTML = `<span>⚠️</span> ${title}`;
+      document.getElementById('confirmModalMessage').innerText = msg;
+      confirmCallback = onConfirm;
+      openModal('confirmModal');
+    }
+
+    function copyToClipboard(text) {
+      try {
+        const temp = document.createElement('textarea');
+        temp.value = text;
+        temp.style.position = 'fixed';
+        temp.style.left = '-9999px';
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        showToast('تم النسخ إلى الحافظة ✓');
+      } catch (err) {
+        showToast('تعذر النسخ التلقائي');
+      }
+    }
+
+    /* --- LOCAL STORAGE --- */
+    function loadSavedStateLocally() {
+      try {
+        const saved = localStorage.getItem('cardkeeper_data_online_v1');
+        if (saved) {
+          const p = JSON.parse(saved);
+          state.game = p.game || 'hand';
+          state.players = (p.players && p.players.length === 4) ? p.players : [...DEFAULT_PLAYERS];
+          state.hand.rounds = (p.hand && Array.isArray(p.hand.rounds)) ? p.hand.rounds : [];
+          state.likha.rounds = (p.likha && Array.isArray(p.likha.rounds)) ? p.likha.rounds : [];
+        }
+        const savedArchive = localStorage.getItem('cardkeeper_archive_online_v1');
+        if (savedArchive) {
+          state.archive = JSON.parse(savedArchive);
+        }
+      } catch (e) {
+        console.error('Local load error:', e);
+      }
+    }
+
+    function persistStateLocally() {
+      try {
+        localStorage.setItem('cardkeeper_data_online_v1', JSON.stringify({
+          game: state.game,
+          players: state.players,
+          hand: { rounds: state.hand.rounds },
+          likha: { rounds: state.likha.rounds }
+        }));
+        localStorage.setItem('cardkeeper_archive_online_v1', JSON.stringify(state.archive));
+      } catch (e) {
+        console.error('Local save error:', e);
+      }
+    }
+
+    /* --- REAL-TIME MULTIPLAYER SYNC (FIRESTORE) --- */
+    async function syncToRoom(actionDescription = '') {
+      persistStateLocally();
+      if (!currentRoomId || !isFirebaseReady || !authUser || !db) return;
+
+      try {
+        // RULE 1: Strict public path
+        const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', currentRoomId);
+        const payload = {
+          roomId: currentRoomId,
+          lastUpdated: Date.now(),
+          updatedBy: authUser.uid,
+          game: state.game,
+          players: state.players,
+          hand: { rounds: state.hand.rounds },
+          likha: { rounds: state.likha.rounds },
+          archive: state.archive
+        };
+        await setDoc(roomRef, payload, { merge: true });
+        playChime(620);
+        showToast(actionDescription ? `تم التحديث لايف: ${actionDescription}` : 'تمت المزامنة لايف 🟢');
+      } catch (err) {
+        console.error('Room sync error:', err);
+        showToast('تعذر المزامنة السحابية');
+      }
+    }
+
+    function subscribeToRoomUpdates(roomId) {
+      if (roomUnsubscribe) {
+        roomUnsubscribe();
+        roomUnsubscribe = null;
+      }
+      if (!db || !authUser) return;
+
+      const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', roomId);
+      // RULE 3 & Mandatory Error Callback
+      roomUnsubscribe = onSnapshot(roomRef, (snapshot) => {
+        if (!snapshot.exists()) {
+          showToast('الغرفة غير متوفرة أو تم إنهاؤها');
+          leaveCurrentRoom(false);
+          return;
+        }
+
+        const data = snapshot.data();
+        if (data.updatedBy !== authUser.uid) {
+          // Received update from another player
+          if (data.players && Array.isArray(data.players) && data.players.length === 4) {
+            state.players = data.players;
+          }
+          if (data.game) state.game = data.game;
+          if (data.hand && Array.isArray(data.hand.rounds)) state.hand.rounds = data.hand.rounds;
+          if (data.likha && Array.isArray(data.likha.rounds)) state.likha.rounds = data.likha.rounds;
+          if (data.archive && Array.isArray(data.archive)) state.archive = data.archive;
+
+          persistStateLocally();
+          renderAll();
+          playChime(520);
+          showToast('تحديث مباشر من الشباب 🔄');
+        }
+      }, (error) => {
+        console.error('Room subscription error:', error);
+        showToast('انقطع الاتصال بالغرفة');
+      });
+    }
+
+    async function createNewRoom() {
+      if (!isFirebaseReady || !authUser || !db) {
+        showToast('خدمة الأونلاين غير مفعلة، يعمل التطبيق محلياً.');
+        return;
+      }
+
+      const generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+      currentRoomId = generatedCode;
+
+      try {
+        const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', currentRoomId);
+        const initialData = {
+          roomId: currentRoomId,
+          createdAt: Date.now(),
+          lastUpdated: Date.now(),
+          updatedBy: authUser.uid,
+          game: state.game,
+          players: state.players,
+          hand: { rounds: state.hand.rounds },
+          likha: { rounds: state.likha.rounds },
+          archive: state.archive
+        };
+        await setDoc(roomRef, initialData);
+
+        subscribeToRoomUpdates(currentRoomId);
+        updateRoomUI();
+        closeModal('roomModal');
+        playChime(880);
+        showToast(`تم إنشاء الغرفة #${currentRoomId} بنجاح 🟢`);
+
+        // Automatically update browser URL param without reload
+        try {
+          const url = new URL(window.location);
+          url.searchParams.set('room', currentRoomId);
+          window.history.pushState({}, '', url);
+        } catch (e) {}
+
+      } catch (err) {
+        console.error('Create room error:', err);
+        showToast('تعذر إنشاء الغرفة السحابية');
+      }
+    }
+
+    async function joinExistingRoom(code) {
+      if (!code || code.length < 3) {
+        showToast('يرجى إدخال كود الغرفة المكون من أرقام');
+        return;
+      }
+      if (!isFirebaseReady || !authUser || !db) {
+        showToast('خدمة الأونلاين غير مفعلة');
+        return;
+      }
+
+      try {
+        const roomRef = doc(db, 'artifacts', appId, 'public', 'data', 'rooms', code);
+        const snap = await getDoc(roomRef);
+
+        if (!snap.exists()) {
+          showToast('الغرفة غير موجودة، تأكد من الكود');
+          return;
+        }
+
+        currentRoomId = code;
+        const data = snap.data();
+        if (data.players && Array.isArray(data.players) && data.players.length === 4) state.players = data.players;
+        if (data.game) state.game = data.game;
+        if (data.hand && Array.isArray(data.hand.rounds)) state.hand.rounds = data.hand.rounds;
+        if (data.likha && Array.isArray(data.likha.rounds)) state.likha.rounds = data.likha.rounds;
+        if (data.archive && Array.isArray(data.archive)) state.archive = data.archive;
+
+        subscribeToRoomUpdates(currentRoomId);
+        updateRoomUI();
+        renderAll();
+        closeModal('roomModal');
+        playChime(880);
+        showToast(`تم الانضمام للغرفة #${currentRoomId} 🟢`);
+
+        try {
+          const url = new URL(window.location);
+          url.searchParams.set('room', currentRoomId);
+          window.history.pushState({}, '', url);
+        } catch (e) {}
+
+      } catch (err) {
+        console.error('Join room error:', err);
+        showToast('تعذر الانضمام للغرفة');
+      }
+    }
+
+    function leaveCurrentRoom(notify = true) {
+      if (roomUnsubscribe) {
+        roomUnsubscribe();
+        roomUnsubscribe = null;
+      }
+      currentRoomId = null;
+      updateRoomUI();
+      try {
+        const url = new URL(window.location);
+        url.searchParams.delete('room');
+        window.history.pushState({}, '', url);
+      } catch (e) {}
+      if (notify) showToast('عدت إلى الوضع المحلي 🏠');
+    }
+
+    function updateRoomUI() {
+      const syncBar = document.getElementById('roomSyncBar');
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('roomStatusText');
+      const quickActionBtn = document.getElementById('btnRoomQuickAction');
+      const connectedView = document.getElementById('roomConnectedView');
+      const disconnectedView = document.getElementById('roomDisconnectedView');
+      const modalCode = document.getElementById('roomModalCode');
+
+      if (currentRoomId) {
+        syncBar.classList.add('online-active');
+        statusDot.classList.add('active');
+        statusText.innerHTML = `متصل لايف 🟢 <b class="num" style="color:#fff; margin-right:4px;">#${currentRoomId}</b>`;
+        quickActionBtn.innerHTML = `<span>📋 نسخ الكود</span>`;
+        connectedView.style.display = 'flex';
+        disconnectedView.style.display = 'none';
+        modalCode.innerText = currentRoomId;
+      } else {
+        syncBar.classList.remove('online-active');
+        statusDot.classList.remove('active');
+        statusText.innerText = 'وضع محلي (غير متصل بغرفة)';
+        quickActionBtn.innerHTML = `<span>إنشاء غرفة ⚡</span>`;
+        connectedView.style.display = 'none';
+        disconnectedView.style.display = 'flex';
+      }
+    }
+
+    /* --- DEALER LOGIC (مين عليه التوزيع = الخاسر بالمجموع) --- */
+    function getDealerInfo() {
+      const activeGame = state.game;
+      const rounds = activeGame === 'hand' ? state.hand.rounds : state.likha.rounds;
+      
+      if (rounds.length === 0) {
+        return {
+          playerIndex: 0,
+          playerName: state.players[0],
+          reason: 'بانتظار أول جولة (الافتراضي)'
+        };
+      }
+
+      const totals = calculateTotals(rounds);
+      let maxScore = -Infinity;
+      let loserIndex = 0;
+
+      for (let i = 0; i < 4; i++) {
+        if (totals[i] > maxScore) {
+          maxScore = totals[i];
+          loserIndex = i;
+        }
+      }
+
+      return {
+        playerIndex: loserIndex,
+        playerName: state.players[loserIndex],
+        reason: `صاحب أعلى سكور خاسر (${maxScore >= 0 && activeGame === 'hand' ? '+' : ''}${maxScore})`
+      };
+    }
+
+    function calculateTotals(rounds) {
+      const totals = [0, 0, 0, 0];
+      rounds.forEach(r => {
+        for (let i = 0; i < 4; i++) totals[i] += (r[i] || 0);
+      });
+      return totals;
+    }
+
+    function switchGame(gameType, shouldSync = true) {
+      state.game = gameType;
+      const tabH = document.getElementById('tabBtnHand');
+      const tabL = document.getElementById('tabBtnLikha');
+      const viewH = document.getElementById('handView');
+      const viewL = document.getElementById('likhaView');
+
+      if (gameType === 'hand') {
+        tabH.classList.add('active');
+        tabL.classList.remove('active');
+        viewH.style.display = 'flex';
+        viewL.style.display = 'none';
+      } else {
+        tabL.classList.add('active');
+        tabH.classList.remove('active');
+        viewL.style.display = 'flex';
+        viewH.style.display = 'none';
+      }
+
+      renderAll();
+      if (shouldSync) syncToRoom('تغيير اللعبة');
+    }
+
+    function renderAll() {
+      state.players.forEach((name, i) => {
+        document.querySelectorAll(`.th-p${i}`).forEach(th => th.innerText = name);
+      });
+
+      const dealer = getDealerInfo();
+      document.getElementById('dealerPlayerName').innerText = dealer.playerName;
+      document.getElementById('dealerReason').innerText = dealer.reason;
+
+      renderHand();
+      renderLikha();
+    }
+
+    /* --- HAND RENDER --- */
+    function renderHand() {
+      const rounds = state.hand.rounds;
+      const roundNum = rounds.length + 1;
+      const isFinished = rounds.length >= 9;
+      const dealer = getDealerInfo();
+
+      // Track dots
+      const track = document.getElementById('handRoundPills');
+      track.innerHTML = '';
+      for (let i = 1; i <= 9; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'round-dot';
+        dot.innerText = i;
+        if (i < roundNum) dot.classList.add('done');
+        else if (i === roundNum && !isFinished) dot.classList.add('current');
+        track.appendChild(dot);
+      }
+      document.getElementById('handRoundStatus').innerText = isFinished ? 'اكتملت 9 جولات 🎉' : `الجولة ${roundNum} من 9`;
+
+      // Standings
+      const totals = calculateTotals(rounds);
+      const ranked = [0, 1, 2, 3].sort((a, b) => totals[a] - totals[b]);
+      const sGrid = document.getElementById('handStandingsGrid');
+      sGrid.innerHTML = '';
+
+      ranked.forEach((pIdx, rank) => {
+        const score = totals[pIdx];
+        const isDealer = (dealer.playerIndex === pIdx);
+        const isLeader = (rank === 0 && rounds.length > 0);
+        const card = document.createElement('div');
+        card.className = `standing-item ${isDealer ? 'is-dealer' : ''} ${isLeader ? 'is-leader' : ''}`;
+        
+        let sClass = 'score-zero';
+        if (score < 0) sClass = 'score-minus';
+        else if (score > 0) sClass = 'score-plus';
+
+        card.innerHTML = `
+          <div class="st-top">
+            <span><span class="st-rank">${rank + 1}#</span> ${state.players[pIdx]}</span>
+            ${isDealer ? '<span title="عليه التوزيع">🎴</span>' : (isLeader ? '👑' : '')}
+          </div>
+          <div class="st-score ${sClass}">
+            <span class="num">${score > 0 ? '+' : ''}${score}</span>
+          </div>
+        `;
+        sGrid.appendChild(card);
+      });
+
+      // Inputs
+      const inSection = document.getElementById('handInputSection');
+      if (isFinished) {
+        inSection.style.display = 'none';
+      } else {
+        inSection.style.display = 'flex';
+        document.getElementById('handInputTitle').innerText = `تسجيل سكور الجولة ${roundNum}`;
+        document.getElementById('handSubmitRoundNum').innerText = `(${roundNum})`;
+        const inRows = document.getElementById('handInputRows');
+        inRows.innerHTML = '';
+
+        state.players.forEach((name, i) => {
+          const isDealer = (dealer.playerIndex === i);
+          const isNeg = state.hand.currentSigns[i] === -1;
+          const row = document.createElement('div');
+          row.className = 'input-row';
+          row.innerHTML = `
+            <div class="player-tag">${isDealer ? '🎴 ' : ''}${name}</div>
+            <input type="number" inputmode="numeric" id="handIn_${i}" class="score-input" placeholder="0" min="0">
+            <button class="sign-btn ${isNeg ? 'negative' : 'positive'}" id="signBtn_${i}">
+              ${isNeg ? '− ماينس' : '+ بلس'}
+            </button>
+          `;
+          inRows.appendChild(row);
+
+          row.querySelector(`#signBtn_${i}`).addEventListener('click', () => {
+            toggleHandSign(i);
+          });
+        });
+      }
+
+      // History Table
+      document.getElementById('handRoundsCountBadge').innerText = `${rounds.length} من 9`;
+      const tbody = document.getElementById('handTableBody');
+      tbody.innerHTML = '';
+      rounds.forEach((r, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="round-num-cell">ج${idx + 1}</td>
+          <td><span class="num">${r[0] > 0 ? '+' : ''}${r[0]}</span></td>
+          <td><span class="num">${r[1] > 0 ? '+' : ''}${r[1]}</span></td>
+          <td><span class="num">${r[2] > 0 ? '+' : ''}${r[2]}</span></td>
+          <td><span class="num">${r[3] > 0 ? '+' : ''}${r[3]}</span></td>
+          <td>
+            <div class="action-icons">
+              <button class="btn-table-action btn-edit-h" data-idx="${idx}">✏️</button>
+              <button class="btn-table-action btn-del-h" data-idx="${idx}" style="color:#f87171;">🗑️</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll('.btn-edit-h').forEach(b => {
+        b.addEventListener('click', () => openEditRoundModal('hand', parseInt(b.dataset.idx)));
+      });
+      tbody.querySelectorAll('.btn-del-h').forEach(b => {
+        b.addEventListener('click', () => deleteRoundPrompt('hand', parseInt(b.dataset.idx)));
+      });
+    }
+
+    function toggleHandSign(i) {
+      state.hand.currentSigns[i] = state.hand.currentSigns[i] === 1 ? -1 : 1;
+      const btn = document.getElementById(`signBtn_${i}`);
+      const isNeg = state.hand.currentSigns[i] === -1;
+      btn.className = `sign-btn ${isNeg ? 'negative' : 'positive'}`;
+      btn.innerText = isNeg ? '− ماينس' : '+ بلس';
+      playChime(350);
+    }
+
+    function submitHandRound() {
+      if (state.hand.rounds.length >= 9) return;
+      const r = [];
+      for (let i = 0; i < 4; i++) {
+        const raw = Math.abs(parseInt(document.getElementById(`handIn_${i}`).value, 10) || 0);
+        r.push(raw * state.hand.currentSigns[i]);
+      }
+      state.hand.rounds.push(r);
+      state.hand.currentSigns = [1, 1, 1, 1];
+      renderAll();
+      syncToRoom(`تسجيل الجولة ${state.hand.rounds.length}`);
+
+      if (state.hand.rounds.length === 9) {
+        showGameOver('hand');
+      }
+    }
+
+    /* --- LIKHA RENDER --- */
+    function renderLikha() {
+      const rounds = state.likha.rounds;
+      const dealer = getDealerInfo();
+      const totals = calculateTotals(rounds);
+      const isOver = totals.some(t => t >= 101);
+
+      // Standings & 101 Bars
+      const ranked = [0, 1, 2, 3].sort((a, b) => totals[a] - totals[b]);
+      const sGrid = document.getElementById('likhaStandingsGrid');
+      sGrid.innerHTML = '';
+
+      ranked.forEach((pIdx, rank) => {
+        const score = totals[pIdx];
+        const isDealer = (dealer.playerIndex === pIdx);
+        const pct = Math.min(100, Math.round((score / 101) * 100));
+        let col = 'var(--accent-green)';
+        if (score >= 101) col = 'var(--accent-red)';
+        else if (score >= 75) col = 'var(--accent-amber)';
+
+        const card = document.createElement('div');
+        card.className = `standing-item ${isDealer ? 'is-dealer' : ''}`;
+        card.innerHTML = `
+          <div class="st-top">
+            <span><span class="st-rank">${rank + 1}#</span> ${state.players[pIdx]}</span>
+            ${isDealer ? '<span title="عليه التوزيع">🎴</span>' : ''}
+          </div>
+          <div class="st-score" style="color: ${score >= 101 ? 'var(--accent-red)' : '#fff'};">
+            <span class="num">${score}</span>
+            <span class="num" style="font-size: 11px; color: var(--text-sub);">/ 101</span>
+          </div>
+          <div class="hp-bar-bg"><div class="hp-bar-fill" style="width: ${pct}%; background: ${col};"></div></div>
+        `;
+        sGrid.appendChild(card);
+      });
+
+      // Inputs
+      const inSec = document.getElementById('likhaInputSection');
+      if (isOver) {
+        inSec.style.display = 'none';
+      } else {
+        inSec.style.display = 'flex';
+        const inRows = document.getElementById('likhaInputRows');
+        inRows.innerHTML = '';
+
+        state.players.forEach((name, i) => {
+          const isDealer = (dealer.playerIndex === i);
+          const row = document.createElement('div');
+          row.className = 'input-row';
+          row.innerHTML = `
+            <div class="player-tag">${isDealer ? '🎴 ' : ''}${name}</div>
+            <input type="number" inputmode="numeric" id="likhaIn_${i}" class="score-input" placeholder="0" min="0" max="36">
+            <button class="baqi-btn" id="btnBaqi_${i}">⚡ باقي</button>
+          `;
+          inRows.appendChild(row);
+
+          row.querySelector(`#likhaIn_${i}`).addEventListener('input', checkLikha36);
+          row.querySelector(`#btnBaqi_${i}`).addEventListener('click', () => fillLikhaBaqi(i));
+        });
+        checkLikha36();
+      }
+
+      // History Table
+      document.getElementById('likhaRoundsCountBadge').innerText = `${rounds.length} جولة`;
+      const tbody = document.getElementById('likhaTableBody');
+      tbody.innerHTML = '';
+      rounds.forEach((r, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="round-num-cell">ج${idx + 1}</td>
+          <td><span class="num">${r[0]}</span></td>
+          <td><span class="num">${r[1]}</span></td>
+          <td><span class="num">${r[2]}</span></td>
+          <td><span class="num">${r[3]}</span></td>
+          <td>
+            <div class="action-icons">
+              <button class="btn-table-action btn-edit-l" data-idx="${idx}">✏️</button>
+              <button class="btn-table-action btn-del-l" data-idx="${idx}" style="color:#f87171;">🗑️</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      tbody.querySelectorAll('.btn-edit-l').forEach(b => {
+        b.addEventListener('click', () => openEditRoundModal('likha', parseInt(b.dataset.idx)));
+      });
+      tbody.querySelectorAll('.btn-del-l').forEach(b => {
+        b.addEventListener('click', () => deleteRoundPrompt('likha', parseInt(b.dataset.idx)));
+      });
+    }
+
+    function checkLikha36() {
+      let sum = 0;
+      for (let i = 0; i < 4; i++) {
+        sum += (parseInt(document.getElementById(`likhaIn_${i}`)?.value, 10) || 0);
+      }
+      const meter = document.getElementById('likhaBalanceMeter');
+      const text = document.getElementById('likhaBalanceText');
+      const badge = document.getElementById('likhaCurrentSumBadge');
+      const btn = document.getElementById('btnSubmitLikha');
+      badge.innerText = `${sum} / 36`;
+
+      if (sum === 36) {
+        meter.className = 'balance-meter exact';
+        text.innerText = 'مجموع 36 مضبوط تماماً ✓';
+        btn.disabled = false;
+      } else if (sum < 36) {
+        meter.className = 'balance-meter under';
+        text.innerText = `فاضل ${36 - sum} نقطة`;
+        btn.disabled = true;
+      } else {
+        meter.className = 'balance-meter over';
+        text.innerText = `زايد ${sum - 36} نقطة`;
+        btn.disabled = true;
+      }
+    }
+
+    function fillLikhaBaqi(targetIdx) {
+      let other = 0;
+      for (let i = 0; i < 4; i++) {
+        if (i !== targetIdx) other += (parseInt(document.getElementById(`likhaIn_${i}`)?.value, 10) || 0);
+      }
+      const remainder = Math.max(0, 36 - other);
+      document.getElementById(`likhaIn_${targetIdx}`).value = remainder;
+      playChime(420);
+      checkLikha36();
+    }
+
+    function submitLikhaRound() {
+      let sum = 0;
+      const r = [];
+      for (let i = 0; i < 4; i++) {
+        const val = parseInt(document.getElementById(`likhaIn_${i}`).value, 10) || 0;
+        r.push(val);
+        sum += val;
+      }
+      if (sum !== 36) {
+        showToast('مجموع الجولة لازم يكون 36 بالضبط');
+        return;
+      }
+
+      state.likha.rounds.push(r);
+      renderAll();
+      syncToRoom(`تسجيل جولة ليخة (${state.likha.rounds.length})`);
+
+      const totals = calculateTotals(state.likha.rounds);
+      if (totals.some(t => t >= 101)) {
+        showGameOver('likha');
+      }
+    }
+
+    /* --- TITLES ENGINE (ألقاب نهاية اللعبة) --- */
+    function buildTitles(gameType) {
+      const rounds = gameType === 'hand' ? state.hand.rounds : state.likha.rounds;
+      const totals = calculateTotals(rounds);
+      const sorted = [0, 1, 2, 3].sort((a, b) => totals[a] - totals[b]);
+      const titles = [];
+
+      if (gameType === 'hand') {
+        titles.push({
+          icon: '👑',
+          label: 'حوت الهاند (الرابح)',
+          player: state.players[sorted[0]],
+          desc: `تربع على العرش بأكبر ماينس (${totals[sorted[0]]}).`
+        });
+        titles.push({
+          icon: '☕',
+          label: 'كبش الفداء (الخاسر)',
+          player: state.players[sorted[3]],
+          desc: `أعلى سكور بالجلسة (${totals[sorted[3]]}). القهوة ع حسابه والدور الجاي عليه التوزيع!`
+        });
+
+        let minScore = 0;
+        let pMinus = 0;
+        rounds.forEach(r => r.forEach((s, idx) => {
+          if (s < minScore) { minScore = s; pMinus = idx; }
+        }));
+        if (minScore < 0) {
+          titles.push({
+            icon: '⚡',
+            label: 'ضربة معلّم',
+            player: state.players[pMinus],
+            desc: `ضرب أقوى جولة ماينس (${minScore}) نقطة.`
+          });
+        }
+
+        titles.push({
+          icon: '🧊',
+          label: 'المتفرّج المسالم',
+          player: state.players[sorted[1]],
+          desc: 'لعب بهدوء بدون ما يخاطر ولا يعصب، ماشي جنب الحيط.'
+        });
+      } else {
+        let loserIdx = sorted[3];
+        for (let i = 0; i < 4; i++) {
+          if (totals[i] >= 101) { loserIdx = i; break; }
+        }
+
+        titles.push({
+          icon: '🛡️',
+          label: 'الدرع الفولاذي',
+          player: state.players[sorted[0]],
+          desc: `أقل كروت ليخة انبلعت معه (${totals[sorted[0]]}) نقطة فقط!`
+        });
+        titles.push({
+          icon: '💀',
+          label: 'ضحية الـ 101',
+          player: state.players[loserIdx],
+          desc: `أول واحد طار فوق الـ 101 (${totals[loserIdx]}) ونهى اللعبة.`
+        });
+
+        let maxSingle = 0;
+        let pGlutton = 0;
+        rounds.forEach(r => r.forEach((s, idx) => {
+          if (s > maxSingle) { maxSingle = s; pGlutton = idx; }
+        }));
+        if (maxSingle >= 14) {
+          titles.push({
+            icon: '💣',
+            label: 'بلّاع الليخات',
+            player: state.players[pGlutton],
+            desc: `بلع بجولة وحدة ${maxSingle} نقطة خربت بيت سكوره!`
+          });
+        }
+
+        let cleanPlayer = sorted[0];
+        titles.push({
+          icon: '🕊️',
+          label: 'نظيف الكف',
+          player: state.players[cleanPlayer],
+          desc: 'مهرّب كروت محترف، عرف كيف يفل بدون وجعة راس.'
+        });
+      }
+
+      return titles;
+    }
+
+    function showGameOver(gameType) {
+      fireConfetti();
+      const rounds = gameType === 'hand' ? state.hand.rounds : state.likha.rounds;
+      const totals = calculateTotals(rounds);
+      const sorted = [0, 1, 2, 3].sort((a, b) => totals[a] - totals[b]);
+      
+      let loserIdx = sorted[3];
+      if (gameType === 'likha') {
+        for (let i = 0; i < 4; i++) {
+          if (totals[i] >= 101) { loserIdx = i; break; }
+        }
+      }
+
+      document.getElementById('gameOverModalTitle').innerText = gameType === 'hand' ? 'اكتملت الـ 9 جولات!' : 'وصل لاعب للـ 101!';
+      document.getElementById('goWinnerName').innerText = state.players[sorted[0]];
+      document.getElementById('goWinnerScore').innerText = `${totals[sorted[0]] > 0 && gameType === 'hand' ? '+' : ''}${totals[sorted[0]]}`;
+      document.getElementById('goLoserName').innerText = state.players[loserIdx];
+      document.getElementById('goLoserScore').innerText = `${totals[loserIdx] > 0 && gameType === 'hand' ? '+' : ''}${totals[loserIdx]}`;
+
+      const titles = buildTitles(gameType);
+      const tGrid = document.getElementById('goTitlesGrid');
+      tGrid.innerHTML = '';
+      titles.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'title-card';
+        el.innerHTML = `
+          <div class="title-icon">${t.icon}</div>
+          <div class="title-details">
+            <div style="display:flex; justify-content:space-between;">
+              <span class="title-label">${t.label}</span>
+              <span class="title-player">${t.player}</span>
+            </div>
+            <div class="title-desc">${t.desc}</div>
+          </div>
+        `;
+        tGrid.appendChild(el);
+      });
+
+      openModal('gameOverModal');
+      playChime(750);
+    }
+
+    function shareToWhatsApp() {
+      const gType = state.game;
+      const rounds = gType === 'hand' ? state.hand.rounds : state.likha.rounds;
+      const totals = calculateTotals(rounds);
+      const sorted = [0, 1, 2, 3].sort((a, b) => totals[a] - totals[b]);
+      const titles = buildTitles(gType);
+
+      let msg = `🃏 *نتائج قعدة الورق (${gType === 'hand' ? 'هاند' : 'ليخة'})*\n`;
+      if (currentRoomId) msg += `غرفة أونلاين: #${currentRoomId}\n`;
+      msg += `👑 *الرابح:* ${state.players[sorted[0]]} (${totals[sorted[0]]})\n`;
+      msg += `☕ *الخاسر:* ${state.players[sorted[3]]} (${totals[sorted[3]]})\n\n`;
+      msg += `📊 *السكور النهائي:*\n`;
+      sorted.forEach((pIdx, i) => {
+        msg += `${i+1}. ${state.players[pIdx]}: ${totals[pIdx]}\n`;
+      });
+      msg += `\n🎖️ *الألقاب:*\n`;
+      titles.forEach(t => {
+        msg += `${t.icon} ${t.label}: ${t.player}\n`;
+      });
+      msg += `\nالقهوة بكرا ع حساب ${state.players[sorted[3]]} 😉☕`;
+
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function archiveCurrentGameAndReset() {
+      const gType = state.game;
+      const rounds = gType === 'hand' ? state.hand.rounds : state.likha.rounds;
+      if (rounds.length === 0) return;
+
+      const totals = calculateTotals(rounds);
+      const sorted = [0, 1, 2, 3].sort((a, b) => totals[a] - totals[b]);
+      let loserIdx = sorted[3];
+      if (gType === 'likha') {
+        for (let i = 0; i < 4; i++) {
+          if (totals[i] >= 101) { loserIdx = i; break; }
+        }
+      }
+
+      state.archive.unshift({
+        id: Date.now(),
+        date: new Date().toLocaleDateString('ar-LB', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        gameType: gType === 'hand' ? 'هاند' : 'ليخة',
+        players: [...state.players],
+        totals: [...totals],
+        winner: state.players[sorted[0]],
+        loser: state.players[loserIdx],
+        roundsCount: rounds.length
+      });
+
+      if (gType === 'hand') {
+        state.hand.rounds = [];
+        state.hand.currentSigns = [1, 1, 1, 1];
+      } else {
+        state.likha.rounds = [];
+      }
+
+      closeModal('gameOverModal');
+      renderAll();
+      syncToRoom('أرشفة اللعبة وبدء جديدة');
+    }
+
+    /* --- ARCHIVE MODAL --- */
+    function openArchiveModal() {
+      const container = document.getElementById('archiveListContainer');
+      document.getElementById('archiveTotalCount').innerText = state.archive.length;
+      container.innerHTML = '';
+
+      if (state.archive.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px 0; font-size:12px;">الأرشيف فاضي حالياً.<br>بعد ما تخلص أي لعبة، احفظها هون!</div>`;
+      } else {
+        state.archive.forEach((item, idx) => {
+          const div = document.createElement('div');
+          div.className = 'archive-item';
+          div.innerHTML = `
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-sub);">
+              <span style="font-weight:700; color:#60a5fa;">${item.gameType} (${item.roundsCount} جولات)</span>
+              <span>${item.date}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:800;">
+              <span style="color:var(--accent-green);">👑 ${item.winner}</span>
+              <span style="color:var(--accent-red);">☕ ${item.loser}</span>
+            </div>
+            <div class="archive-scores-grid">
+              ${item.players.map((n, i) => `
+                <div class="archive-score-pill">
+                  <span style="color:var(--text-muted);">${n}</span>
+                  <span class="num">${item.totals[i]}</span>
+                </div>
+              `).join('')}
+            </div>
+            <div style="display:flex; justify-content:flex-end;">
+              <button class="btn-table-action btn-del-arch" data-idx="${idx}" style="color:var(--accent-red); font-size:11px;">حذف</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+        container.querySelectorAll('.btn-del-arch').forEach(b => {
+          b.addEventListener('click', () => {
+            const idx = parseInt(b.dataset.idx);
+            showConfirmModal('حذف القعدة', 'هل تريد حذف هذه القعدة من الأرشيف؟', () => {
+              state.archive.splice(idx, 1);
+              openArchiveModal();
+              syncToRoom('حذف قعدة من الأرشيف');
+            });
+          });
+        });
+      }
+      openModal('archiveModal');
+    }
+
+    function clearAllArchive() {
+      showConfirmModal('مسح الأرشيف', 'هل أنت متأكد من مسح جميع القعدات المؤرشفة نهائياً؟', () => {
+        state.archive = [];
+        openArchiveModal();
+        syncToRoom('مسح الأرشيف');
+      });
+    }
+
+    /* --- EDIT ROUNDS --- */
+    function deleteRoundPrompt(gType, rIdx) {
+      showConfirmModal('حذف الجولة', `هل أنت متأكد من حذف الجولة رقم ${rIdx + 1}؟`, () => {
+        if (gType === 'hand') state.hand.rounds.splice(rIdx, 1);
+        else state.likha.rounds.splice(rIdx, 1);
+        renderAll();
+        syncToRoom(`حذف الجولة ${rIdx + 1}`);
+      });
+    }
+
+    function openEditRoundModal(gType, rIdx) {
+      editingRoundGame = gType;
+      editingRoundIndex = rIdx;
+      document.getElementById('editRoundTitle').innerText = `تعديل الجولة ${rIdx + 1} (${gType === 'hand' ? 'هاند' : 'ليخة'})`;
+      
+      const container = document.getElementById('editRoundInputsContainer');
+      const likhaMeter = document.getElementById('editLikhaBalanceMeter');
+      container.innerHTML = '';
+
+      const curr = gType === 'hand' ? state.hand.rounds[rIdx] : state.likha.rounds[rIdx];
+
+      if (gType === 'hand') {
+        likhaMeter.style.display = 'none';
+        editSigns = curr.map(v => v < 0 ? -1 : 1);
+        state.players.forEach((name, i) => {
+          const val = Math.abs(curr[i]);
+          const isNeg = editSigns[i] === -1;
+          const row = document.createElement('div');
+          row.className = 'input-row';
+          row.innerHTML = `
+            <div class="player-tag">${name}</div>
+            <input type="number" id="editIn_${i}" class="score-input" value="${val}" min="0">
+            <button class="sign-btn ${isNeg ? 'negative' : 'positive'}" id="editSignBtn_${i}">
+              ${isNeg ? '− ماينس' : '+ بلس'}
+            </button>
+          `;
+          container.appendChild(row);
+
+          row.querySelector(`#editSignBtn_${i}`).addEventListener('click', () => {
+            toggleEditSign(i);
+          });
+        });
+      } else {
+        likhaMeter.style.display = 'flex';
+        state.players.forEach((name, i) => {
+          const row = document.createElement('div');
+          row.className = 'input-row';
+          row.innerHTML = `
+            <div class="player-tag">${name}</div>
+            <input type="number" id="editIn_${i}" class="score-input" value="${curr[i]}" min="0" max="36">
+            <button class="baqi-btn" id="btnEditBaqi_${i}">⚡ باقي</button>
+          `;
+          container.appendChild(row);
+
+          row.querySelector(`#editIn_${i}`).addEventListener('input', checkEditLikhaSum);
+          row.querySelector(`#btnEditBaqi_${i}`).addEventListener('click', () => fillEditLikhaBaqi(i));
+        });
+        checkEditLikhaSum();
+      }
+      openModal('editRoundModal');
+    }
+
+    function toggleEditSign(i) {
+      editSigns[i] = editSigns[i] === 1 ? -1 : 1;
+      const btn = document.getElementById(`editSignBtn_${i}`);
+      const isNeg = editSigns[i] === -1;
+      btn.className = `sign-btn ${isNeg ? 'negative' : 'positive'}`;
+      btn.innerText = isNeg ? '− ماينس' : '+ بلس';
+      playChime(350);
+    }
+
+    function checkEditLikhaSum() {
+      let sum = 0;
+      for (let i = 0; i < 4; i++) sum += (parseInt(document.getElementById(`editIn_${i}`)?.value, 10) || 0);
+      const meter = document.getElementById('editLikhaBalanceMeter');
+      const text = document.getElementById('editLikhaBalanceText');
+      const val = document.getElementById('editLikhaBalanceVal');
+      const btn = document.getElementById('btnSaveEditedRound');
+      val.innerText = `${sum} / 36`;
+
+      if (sum === 36) {
+        meter.className = 'balance-meter exact';
+        text.innerText = 'مجموع 36 مضبوط تماماً ✓';
+        btn.disabled = false;
+      } else if (sum < 36) {
+        meter.className = 'balance-meter under';
+        text.innerText = `فاضل ${36 - sum} نقطة`;
+        btn.disabled = true;
+      } else {
+        meter.className = 'balance-meter over';
+        text.innerText = `زايد ${sum - 36} نقطة`;
+        btn.disabled = true;
+      }
+    }
+
+    function fillEditLikhaBaqi(targetIdx) {
+      let other = 0;
+      for (let i = 0; i < 4; i++) {
+        if (i !== targetIdx) other += (parseInt(document.getElementById(`editIn_${i}`)?.value, 10) || 0);
+      }
+      document.getElementById(`editIn_${targetIdx}`).value = Math.max(0, 36 - other);
+      checkEditLikhaSum();
+    }
+
+    function confirmSaveEditedRound() {
+      const res = [];
+      for (let i = 0; i < 4; i++) {
+        const raw = Math.abs(parseInt(document.getElementById(`editIn_${i}`).value, 10) || 0);
+        res.push(editingRoundGame === 'hand' ? raw * editSigns[i] : raw);
+      }
+      if (editingRoundGame === 'likha' && res.reduce((a, b) => a + b, 0) !== 36) {
+        showToast('مجموع الجولة لازم يكون 36');
+        return;
+      }
+
+      if (editingRoundGame === 'hand') state.hand.rounds[editingRoundIndex] = res;
+      else state.likha.rounds[editingRoundIndex] = res;
+
+      closeModal('editRoundModal');
+      renderAll();
+      syncToRoom(`تعديل الجولة ${editingRoundIndex + 1}`);
+    }
+
+    /* --- PLAYER NAMES --- */
+    function openNamesModal() {
+      for (let i = 0; i < 4; i++) document.getElementById(`nameInput${i}`).value = state.players[i];
+      openModal('namesModal');
+    }
+
+    function savePlayerNames() {
+      for (let i = 0; i < 4; i++) {
+        const val = document.getElementById(`nameInput${i}`).value.trim();
+        if (val) state.players[i] = val;
+      }
+      closeModal('namesModal');
+      renderAll();
+      syncToRoom('تحديث أسماء اللاعبين');
+    }
+
+    /* --- RESET & MODALS --- */
+    function promptResetGame() {
+      const gName = state.game === 'hand' ? 'الهاند' : 'الليخة';
+      showConfirmModal('تصفير اللعبة', `هل أنت متأكد من تصفير سكورات ${gName} الحالية للبدء من جديد؟`, () => {
+        if (state.game === 'hand') {
+          state.hand.rounds = [];
+          state.hand.currentSigns = [1, 1, 1, 1];
+        } else {
+          state.likha.rounds = [];
+        }
+        renderAll();
+        syncToRoom(`تصفير ${gName}`);
+      });
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    /* Confetti Animation */
+    function fireConfetti() {
+      const c = document.getElementById('confetti-canvas');
+      const ctx = c.getContext('2d');
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      const particles = [];
+      const colors = ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'];
+
+      for (let i = 0; i < 65; i++) {
+        particles.push({
+          x: c.width / 2,
+          y: c.height / 3,
+          r: Math.random() * 4 + 2,
+          dx: (Math.random() - 0.5) * 11,
+          dy: (Math.random() - 0.7) * 13,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+
+      let frame = 0;
+      function step() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        particles.forEach(p => {
+          p.x += p.dx;
+          p.y += p.dy;
+          p.dy += 0.25;
+          ctx.beginPath();
+          ctx.fillStyle = p.color;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        if (++frame < 90) requestAnimationFrame(step);
+        else ctx.clearRect(0, 0, c.width, c.height);
+      }
+      step();
+    }
+
+    /* ========================================================
+       BOOTSTRAP & EVENT LISTENERS
+       ======================================================== */
+    async function initFirebaseAndAuth() {
+      if (typeof __firebase_config !== 'undefined') {
+        try {
+          const firebaseConfig = JSON.parse(__firebase_config);
+          const app = initializeApp(firebaseConfig);
+          auth = getAuth(app);
+          db = getFirestore(app);
+
+          // RULE 3: Auth Before Queries
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+
+          onAuthStateChanged(auth, (user) => {
+            authUser = user;
+            if (user) {
+              isFirebaseReady = true;
+              document.getElementById('userDisplayTag').innerText = `متصل: ${user.uid.slice(0, 6)}`;
+              
+              // Check URL for room code param
+              const urlParams = new URLSearchParams(window.location.search);
+              const roomParam = urlParams.get('room');
+              if (roomParam && !currentRoomId) {
+                joinExistingRoom(roomParam);
+              }
+            }
+          });
+        } catch (e) {
+          console.warn('Firebase init warning:', e);
+          document.getElementById('userDisplayTag').innerText = 'وضع محلي';
+        }
+      } else {
+        document.getElementById('userDisplayTag').innerText = 'وضع محلي (بدون سحابة)';
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      loadSavedStateLocally();
+      renderAll();
+      updateRoomUI();
+
+      // Tab switcher
+      document.getElementById('tabBtnHand').addEventListener('click', () => switchGame('hand'));
+      document.getElementById('tabBtnLikha').addEventListener('click', () => switchGame('likha'));
+
+      // Submissions
+      document.getElementById('btnSubmitHand').addEventListener('click', submitHandRound);
+      document.getElementById('btnSubmitLikha').addEventListener('click', submitLikhaRound);
+
+      // Room modal actions
+      document.getElementById('btnOpenRoomModal').addEventListener('click', () => openModal('roomModal'));
+      document.getElementById('btnCloseRoomModal').addEventListener('click', () => closeModal('roomModal'));
+      document.getElementById('btnRoomQuickAction').addEventListener('click', () => {
+        if (currentRoomId) {
+          copyToClipboard(currentRoomId);
+        } else {
+          openModal('roomModal');
+        }
+      });
+      document.getElementById('btnCreateRoomAction').addEventListener('click', createNewRoom);
+      document.getElementById('btnJoinRoomAction').addEventListener('click', () => {
+        const val = document.getElementById('joinRoomCodeInput').value.trim();
+        joinExistingRoom(val);
+      });
+      document.getElementById('btnCopyRoomLink').addEventListener('click', () => {
+        if (currentRoomId) {
+          const url = `${window.location.origin}${window.location.pathname}?room=${currentRoomId}`;
+          copyToClipboard(url);
+        }
+      });
+      document.getElementById('btnShareRoomWhatsApp').addEventListener('click', () => {
+        if (currentRoomId) {
+          const url = `${window.location.origin}${window.location.pathname}?room=${currentRoomId}`;
+          const msg = `🃏 يلا عالورق! انضموا لقعدة السكور لايف:\nكود الغرفة: ${currentRoomId}\nالرابط: ${url}`;
+          window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+      });
+      document.getElementById('btnLeaveRoom').addEventListener('click', () => {
+        leaveCurrentRoom();
+        closeModal('roomModal');
+      });
+
+      // Player names modal
+      document.getElementById('btnOpenNamesModal').addEventListener('click', openNamesModal);
+      document.getElementById('btnCloseNamesModal').addEventListener('click', () => closeModal('namesModal'));
+      document.getElementById('btnSavePlayerNames').addEventListener('click', savePlayerNames);
+
+      // Archive modal
+      document.getElementById('btnOpenArchiveModal').addEventListener('click', openArchiveModal);
+      document.getElementById('btnCloseArchiveModal').addEventListener('click', () => closeModal('archiveModal'));
+      document.getElementById('btnCloseArchiveBottom').addEventListener('click', () => closeModal('archiveModal'));
+      document.getElementById('btnClearAllArchive').addEventListener('click', clearAllArchive);
+
+      // Reset modal
+      document.getElementById('btnOpenResetModal').addEventListener('click', promptResetGame);
+
+      // Edit round modal
+      document.getElementById('btnCloseEditRoundModal').addEventListener('click', () => closeModal('editRoundModal'));
+      document.getElementById('btnSaveEditedRound').addEventListener('click', confirmSaveEditedRound);
+
+      // Confirm modal
+      document.getElementById('btnCloseConfirmModal').addEventListener('click', () => closeModal('confirmModal'));
+      document.getElementById('btnCancelConfirm').addEventListener('click', () => closeModal('confirmModal'));
+      document.getElementById('btnExecuteConfirm').addEventListener('click', () => {
+        if (confirmCallback) confirmCallback();
+        closeModal('confirmModal');
+      });
+
+      // Game over modal
+      document.getElementById('btnCloseGameOverModal').addEventListener('click', () => closeModal('gameOverModal'));
+      document.getElementById('btnShareWhatsAppResults').addEventListener('click', shareToWhatsApp);
+      document.getElementById('btnArchiveCurrentGameAndReset').addEventListener('click', archiveCurrentGameAndReset);
+
+      // Initialize Firebase Auth & Realtime Room
+      await initFirebaseAndAuth();
+    });
+  </script>
+</body>
+</html>
